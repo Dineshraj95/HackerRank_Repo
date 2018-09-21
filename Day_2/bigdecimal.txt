@@ -1,0 +1,8 @@
+     //Write your code here
+       Arrays.sort(s, 0, n, new Comparator<String>(){
+        public int compare(String a1, String a2) {
+            BigDecimal b1 = new BigDecimal(a1);
+            BigDecimal b2 = new BigDecimal(a2);
+            return   b2.compareTo(b1); 
+        }
+        });  
