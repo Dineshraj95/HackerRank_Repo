@@ -1,0 +1,12 @@
+class Printer
+{
+   //Write your code here
+    public static void printArray(Object []array)
+    {
+       for(Object a:array)
+       {
+           System.out.println(a);
+       }
+    }
+ 
+}
