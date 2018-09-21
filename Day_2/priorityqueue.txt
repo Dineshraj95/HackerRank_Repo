@@ -1,0 +1,100 @@
+import java.util.*;
+/*
+ * Create the Student and Priorities classes here.
+ */
+class Student implements Comparable<Student>
+{
+    int id;
+    String name;
+    double cgpa;
+    Student(int id,String name,double cgpa)
+    {
+        this.id=id;
+        this.name=name;
+        this.cgpa=cgpa;
+    }
+    public int getId()
+    {
+        return id;
+    }
+    public String getName()
+    {
+        return name;
+    }
+    public double getCGPA()
+    {
+        return cgpa;
+    }
+    public void setId(int id)
+    {
+        this.id=id;
+    }
+    public void setName(String name)
+    {
+        this.name=name;
+    }
+    public void setCGPA(double cgpa)
+    {
+        this.cgpa=cgpa;
+    }
+    public int compareTo(Student s1)
+    {
+      if(cgpa<s1.cgpa)
+      {
+      return 1;
+      }
+      else if(cgpa>s1.cgpa)
+      {
+      return -1;
+      }
+      else
+      {
+       if(name.compareTo(s1.name)>0)
+       {
+         return 1;
+       }
+         else if(name.compareTo(s1.name)<0)
+         {
+         return -1;
+         }
+         else
+         {
+            if(id>s1.id)
+            {
+            return 1;
+            }
+            else
+            {
+            return -1;
+            }
+         }
+       
+      }
+    }
+    
+}
+class Priorities{
+    public ArrayList<Student> getStudents(List<String> events)
+    {
+        int n = events.size();
+        PriorityQueue<Student> pq = new PriorityQueue<Student>();
+        for(String i:events)
+        {
+            String[] s = new String[4];
+            s = i.split("\\s");
+            if(s.length>1)
+            {
+                pq.add(new Student(Integer.valueOf(s[3]),s[1],Double.valueOf(s[2])));
+            }
+            else
+            {
+                pq.poll();
+            }
+        }
+        while(pq.size()>1)
+        {
+            System.out.println(pq.poll().name);
+        }
+        return new ArrayList<Student>(pq);
+    }
+}
