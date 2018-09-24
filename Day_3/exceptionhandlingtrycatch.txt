@@ -1,0 +1,26 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+       try{
+            Scanner in = new Scanner(System.in);
+            int a1 = in.nextInt();
+            int a2 = in.nextInt();
+            if(a2==0)
+                throw  new ArithmeticException("/ by zero");
+            else
+                System.out.println(a1/a2);
+        }
+        catch(InputMismatchException e){
+            System.out.println(e.getClass().getName());
+        }
+        
+        catch(ArithmeticException e){
+            System.out.println(e);
+        }
+      
+    }
+}
