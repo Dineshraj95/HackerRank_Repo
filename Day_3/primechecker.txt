@@ -1,0 +1,19 @@
+import static java.lang.System.in;
+class Prime
+{
+    public void checkPrime(int... args)
+    {
+        for(int i:args)
+        {
+           
+                   if(BigInteger.valueOf(i).isProbablePrime(1))
+                   {
+                       System.out.print(i+" ");
+                   }
+            
+       
+           
+        }
+        System.out.println();
+    }
+}
