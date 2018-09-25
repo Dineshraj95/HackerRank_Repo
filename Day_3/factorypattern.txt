@@ -1,0 +1,14 @@
+
+         if(order==null)
+         {
+             return null;
+         }
+         if(order.equalsIgnoreCase("PIZZA"))
+         {
+             return new Pizza();
+         }
+        if(order.equalsIgnoreCase("CAKE"))
+        {
+            return new Cake();
+        }
+return null;
