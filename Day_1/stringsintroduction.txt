@@ -1,0 +1,35 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        
+        Scanner sc=new Scanner(System.in);
+        String A=sc.next();
+        String B=sc.next();
+        /* Enter your code here. Print output to STDOUT. */
+        System.out.println(A.length()+B.length());
+        if(A.compareToIgnoreCase(B)>0)
+        {
+            System.out.println("Yes");
+        }
+        else
+        {
+            System.out.println("No");
+        }
+        String sub1=A.substring(0,1);
+        String sub2=A.substring(1);
+        String sub3=(sub1.toUpperCase()).concat(sub2);
+        String sub4=B.substring(0,1);
+        String sub5=B.substring(1);
+        String sub6=(sub4.toUpperCase()).concat(sub5);
+        
+        System.out.println(sub3+" "+sub6);
+    
+        
+    }
+}
+
+
+
