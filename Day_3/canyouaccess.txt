@@ -1,0 +1,7 @@
+            //Solution sub=new Solution();
+             o= new Inner().new Private();
+             String res=new Inner().new Private().powerof2(num);
+             System.out.println(num+" is "+res);
+
+             
+           
