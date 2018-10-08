@@ -24,92 +24,61 @@ function readLine() {
     return inputString[currentLine++];
 }
 
-// Complete the queensAttack function below.
-function queensAttack(n, k, r_q, c_q, obstacles) {
+// Complete the acmTeam function below.
+function acmTeam(topic) {
     
-        var chessBoard = [];
-        for(var i=0;i<n;i++)
+     var n=topic.length;
+        var m=topic[0].length;
+        
+        var kA = [];
+    for(var l=0;l<n;l++)
         {
-            chessBoard[i]=[];
-            for(var j=0;j<n;j++)
+            kA[l]=[];
+            for(var k=0;k<m;k++)
                 {
-                    chessBoard[i][j]=0;
+                    kA[l][k]=0;
                 }
         }
-        var rQueen = r_q-1;
-        var cQueen = c_q-1;
-        var sum = 0;
-        chessBoard[rQueen][cQueen] = 1;
-        for(var a0 = 0; a0 < k; a0++){
-            var rObstacle = obstacles[a0][0]-1;
-            var cObstacle = obstacles[a0][1]-1;
-            // your code goes here
-            chessBoard[rObstacle][cObstacle]=-1;
-        }
-        //check all 8 ways
-        // and down
-        for(var i =rQueen+1;i<n;i++){
-            if(chessBoard[i][cQueen] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-         for(var i =rQueen-1;i>=0;i--){
-              if(chessBoard[i][cQueen] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-        //left and right
-         for(var i =cQueen+1;i<n;i++){
-              if(chessBoard[rQueen][i] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-         for(var i =cQueen-1;i>=0;i--){
-              if(chessBoard[rQueen][i] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-        //diagonal right
-        for(var row =rQueen-1,col=cQueen+1;row>=0 && col<n;row--,col++){
-              if(chessBoard[row][col] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-         for(var row =rQueen+1,col=cQueen-1;row<n && col>=0;row++,col--){
-              if(chessBoard[row][col] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
         
-         //diagonal left
-        for(var row =rQueen-1,col=cQueen-1;row>=0 && col>=0;row--,col--){
-              if(chessBoard[row][col] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
-         for(var row =rQueen+1,col=cQueen+1;row<n && col<n;row++,col++){
-              if(chessBoard[row][col] ==0){
-                sum+=1;
-            }else{
-                break;
-            }
-        }
         
-       return sum;
+        for (var i = 0; i < n; i++){
+            var l = topic[i];
+            
+            for (var j = 0; j < m; j++){
+                if (l[j] == '1'){
+                   kA[i][j] = 1; 
+                }
+            }    
+       }
+       
+       var countmax  = 0;
+       var countteams = 0;
+       
+        for (var i = 0; i < n; i++){
+           
+            for (var j = i+1; j < n; j++){
+                var tempmax = 0;
+                for(var k = 0; k < m; k++){
+                    
+                    if (kA[i][k] == 1 || kA[j][k] == 1){
+                        tempmax++; 
+                    }
+                    
+                }
+                //System.out.println(tempmax);
+                if (tempmax > countmax){
+                    countmax = tempmax;
+                    countteams = 1;
+                }else if(tempmax == countmax){
+                     countteams++;
+                }
+                    
+            }    
+        }
+        var res=[];
+        res[0]=countmax;
+        res[1]=countteams;
+       return res;
 
 
 }
@@ -117,27 +86,22 @@ function queensAttack(n, k, r_q, c_q, obstacles) {
 function main() {
     const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
 
-    const nk = readLine().split(' ');
+    const nm = readLine().split(' ');
 
-    const n = parseInt(nk[0], 10);
+    const n = parseInt(nm[0], 10);
 
-    const k = parseInt(nk[1], 10);
+    const m = parseInt(nm[1], 10);
 
-    const r_qC_q = readLine().split(' ');
+    let topic = [];
 
-    const r_q = parseInt(r_qC_q[0], 10);
-
-    const c_q = parseInt(r_qC_q[1], 10);
-
-    let obstacles = Array(k);
-
-    for (let i = 0; i < k; i++) {
-        obstacles[i] = readLine().split(' ').map(obstaclesTemp => parseInt(obstaclesTemp, 10));
+    for (let i = 0; i < n; i++) {
+        const topicItem = readLine();
+        topic.push(topicItem);
     }
 
-    let result = queensAttack(n, k, r_q, c_q, obstacles);
+    let result = acmTeam(topic);
 
-    ws.write(result + "\n");
+    ws.write(result.join("\n") + "\n");
 
     ws.end();
 }
