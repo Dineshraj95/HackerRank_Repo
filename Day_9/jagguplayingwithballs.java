@@ -1,123 +1,94 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
 
-public class Solution {
-    
-    static class fenwik_tree {
-        int n;
-        long[] fadd;
-        
-        fenwik_tree(int n) {
-            this.n=n; fadd=new long[n];
-        }
-        
-        void update(int i, long add) {
-            while (i<n) {
-                fadd[i]+=add;
-                i|=(i+1);
-            }
-        }
-
-        long query(int i) {
-            long ret=0;
-            while (i>=0) {
-                ret+=fadd[i];
-                i=(i&(i+1))-1;
-            }
-            return ret;
-        }
-        
-        long query(int l, int r) {
-            return query(r)-query(l-1);
-        }
-    }
-
-
+public class JagguPlayingwithBalloons3
+{
     static int N=1000000;
-    static int[] P=new int[] {1000064, 1000448, 1015808, 1048576};
-    static HashMap<Integer, ArrayList<Integer>> m=new HashMap<>();
+    static long[] balloons=new long[N];
+    static int[] bucket1=new int[N];
+    static int[] bucket2=new int[N];
     
-    static {
-        for (int i=0; i<P.length; i++) {
-            int pos=P[i]-N;
-            ArrayList<Integer> l=new ArrayList<>();
-            while(pos<N) {
-                l.add(pos);
-                pos+=Integer.lowestOneBit(pos);
-            }
-            m.put(P[i], l);
-        }
-    }
-    
-    static void update(fenwik_tree t, int pos, int M, int plus) {
-        for (int i=1; i<=50; i++) {
-            int back=pos;
-            while(pos<=N) {
-                t.update(pos, M);
-                pos+=Integer.lowestOneBit(pos);
-            }
-            if(pos==1048576) {
-                for(int j: m.get(pos)) {
-                    t.update(j, 999*M);
-                }
-            } else {
-                for(int j: m.get(pos)) {
-                    t.update(j, M);
-                }
-                
-                for(int j: m.get(1048576)) {
-                    t.update(j, 998*M);
-                }
-            }
-            pos=pos-N;
-            pos=back+plus;
-            if (pos>N) {
-                pos-=N;
-            }
-        }
-    }
-
-    static void solve(int[][] q) {
-        fenwik_tree t=new fenwik_tree(N+1);
-        for (int i=0; i<q.length; i++) {
-            if(q[i][0]==0) {
-                long ret=t.query(q[i][1], q[i][2]);
-                System.out.println(ret);
-            } else {
-                update(t, q[i][1], q[i][2], q[i][3]);
-            }
-        }
-    }
-    
-    
-    
-    
-    static void run_stream(InputStream ins) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        int cnt=Integer.parseInt(br.readLine());
-        int[][] q=new int[cnt][4];
-        for (int i=0; i<cnt; i++) {
-            String[] s=br.readLine().split(" ");
-            if(s[0].equals("R")) {
-                q[i][1]=Integer.parseInt(s[1]);
-                q[i][2]=Integer.parseInt(s[2]);
-            } else {
-                q[i][0]=1;
-                q[i][1]=Integer.parseInt(s[1]);
-                q[i][2]=Integer.parseInt(s[2]);
-                q[i][3]=Integer.parseInt(s[3]);
-            }
-        }
-        solve(q);
-    }
-
-    public static void main(String[] args) throws IOException {
-        run_stream(System.in);
+    public static void main(String[] args) throws IOException
+    {
+        //BufferedReader in = new BufferedReader(new FileReader("input"));
+      BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+      PrintWriter pw=new PrintWriter(System.out);
+      //PrintWriter pw=new PrintWriter("output");
+      
+      for(int i=N-1;i>=0;i--)
+      {
+          bucket1[i]=i|(i+1);
+          //pw.println(bucket1[i]);
+          if (bucket1[i] >= N) {
+              bucket2[i] = bucket1[i] - N;
+          } else {
+              bucket2[i] = bucket2[bucket1[i]];
+          }
+      }
+      
+      int nofq=Integer.parseInt(in.readLine());
+      String[] s;    
         
-        //test_random();
-    }
+      while(nofq-->0)
+      {
+          s=in.readLine().split(" ");
+          if(s[0].equals("R"))
+          {
+              pw.println(count(Integer.parseInt(s[2])-1)-count(Integer.parseInt(s[1])-2));
+          }
+          else
+          {
+              update(Integer.parseInt(s[1])-1,Integer.parseInt(s[2]),Integer.parseInt(s[3]));
+          }
+          
+      }
+      pw.flush();
+      
+      
+  }
+  
+  public static void update(int pos,int M,int plus)
+  {
+      for (int i = 0; i < 50; i++) 
+      {
+          int x = (pos + i * plus) % N;
+          int multiplier = 1000;
+          while (multiplier > 0) {
+              if (bucket2[x] == x) 
+              {
+                  addition(x, M*multiplier);
+                  break;
+              } 
+              else 
+              {
+                  addition(x,M);
+                  multiplier--;
+                  x = bucket2[x];
+              }
+          }
+      }
+  }
+  
+  public static void addition(int pos, long M) 
+  {
+      long add = M;
+      while (pos < N) {
+          balloons[pos] += add;
+          add += M;
+          pos = pos | (pos + 1);
+      }
+  }
+  
+  public static long count(int pos) {
+      long r = 0;
+      while (pos >= 0) {
+          r += balloons[pos];
+          pos = (pos & (pos + 1)) - 1;
+      }
+      return r;
+  }
+  
 }
