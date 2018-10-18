@@ -1,35 +1,70 @@
 function processData(input) {
-  var lines = input.split('\n');
-  var T = parseInt(lines.shift(), 10);
+  var array = input.split('\n');
+  var caseCount = +array.shift();
+  
+  for (var i=0; i<caseCount && array.length;i++){
+    var ladderCount = +array[0];
+    var ladders = array.slice(1, ladderCount+1);
+    var snakeCount = +array[ladderCount+1];
+    var snakes = array.slice(ladderCount+1+1, ladderCount+1+snakeCount+1);
+    array = array.slice(ladderCount+1+snakeCount+1);
+    solveCase(ladders.map(splitOnSpace), snakes.map(splitOnSpace));
+  }
+} 
 
-  while (T--) {
-    lines.shift();
-    var ladders = {};
-    var snakes = {};
-    [ladders, snakes].forEach(function (obj) {
-      lines.shift().split(' ').map(function (pair) {
-        return pair.split(',');
-      }).forEach(function (pair) {
-        obj[pair[0]] = pair[1];
-      });
-    });
-
-    var a = [0];
-    for (var i = 0; i <= 100; i++) { a.push(i); }
-
-    for (i = 1; i < 100; i++) {
-      for (var j = 1; j <= 6 && i + j <= 100; j++) {
-        var t = i + j;
-        var tt = ladders[t] || snakes[t] || t;
-        a[tt] = Math.min(a[i] + 1, a[tt]);
+function solveCase(ladders, snakes) {
+  var field = initArray();
+  insertLadders(ladders,field);
+  insertSnakes(snakes,field);
+  
+  var goal = 100;
+  var reached = [1];
+  var doneFields = [];
+  var steps = 0;
+  while(reached.indexOf(goal) === -1) {
+    if (doneFields.length == reached.length) {
+      steps = -1;
+      break;
+    }
+    for (var i=reached.length-1; i>=0; i--) {
+      if(doneFields.indexOf(reached[i]) == -1) {
+        doneFields.push(reached[i]);
+        for (var j=1; j<7; j++) {
+          var f = field[reached[i]+j];
+          if (reached.indexOf(f) === -1) {
+            reached.push(f);
+          }
+        }
       }
     }
+    steps++;
+  }
+  console.log(steps);
+}
 
-    console.log(a[100]);
+function insertLadders(ladders, field) {
+  for (var i=0; i<ladders.length; i++) {
+    field[ladders[i][0]] = ladders[i][1];
   }
 }
 
+function insertSnakes(snakes, field) {
+  for (var i=0; i<snakes.length; i++) {
+    field[snakes[i][0]] = snakes[i][1];
+  }
+}
 
+function initArray() {
+  var field = [];
+  for (var i=0; i<101;i++) {
+    field.push(i);
+  }
+  return field;
+}
+
+function splitOnSpace(arr) {
+  return arr.split(' ').map(Number);
+}
 process.stdin.resume();
 process.stdin.setEncoding("ascii");
 _input = "";
